@@ -1,0 +1,101 @@
+﻿<Window x:Class="BannerlordBuildVersionSwitcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BannerlordBuildVersionSwitcher"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="520" Width="800"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:commands="clr-namespace:BannerlordBuildVersionSwitcher.Classes.Commands"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        Closing="Window_Closing">
+    <Window.Resources>
+        <commands:OpenFolderBrowserCommand x:Key="OpenFolderBrowserCommand" />
+        <commands:BuildCommand x:Key="BuildCommand" />
+        <commands:ZipCommand x:Key="ZipCommand" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <materialDesign:Card Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <materialDesign:ColorZone CornerRadius="5,5,0,0" Padding="5" Mode="PrimaryDark">
+                    <TextBlock Style="{DynamicResource MaterialDesignHeadline6TextBlock}" Text="Bannerlord Version Switcher" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </materialDesign:ColorZone>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding ProjectPath, Mode=TwoWay}" Margin="10" Style="{DynamicResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="Project Path" />
+                        <Button Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Right" Margin="10,10,20,10" Content="..." Command="{StaticResource OpenFolderBrowserCommand}" CommandParameter="ProjectPath" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding VersionPath, Mode=TwoWay}" Margin="10" Style="{DynamicResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="Versions Path" />
+                        <Button Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Right" Margin="10,10,20,10" Content="..." Command="{StaticResource OpenFolderBrowserCommand}" CommandParameter="VersionPath" />
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding MsBuildPath, Mode=TwoWay}" Margin="10" Style="{DynamicResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="MSBuild Path" />
+                        <Button Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Right" Margin="10,10,20,10" Content="..." Command="{StaticResource OpenFolderBrowserCommand}" CommandParameter="MsBuildPath" />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Text="{Binding ZipOutPath, Mode=TwoWay}" Margin="10" Style="{DynamicResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="ZIP Out Path" />
+                        <Button Style="{DynamicResource MaterialDesignOutlinedButton}" HorizontalAlignment="Right" Margin="10,10,20,10" Content="..." Command="{StaticResource OpenFolderBrowserCommand}" CommandParameter="ZipOutPath" />
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <TextBox ScrollViewer.VerticalScrollBarVisibility="Visible" Text="{Binding FoundProjects, Mode=TwoWay}" Margin="10" IsReadOnly="True" Style="{DynamicResource MaterialDesignFilledTextBox}" TextWrapping="Wrap" VerticalAlignment="Stretch" />
+                        <TextBlock Visibility="{Binding IsBuildStatusVisible, Converter={StaticResource BooleanToVisibilityConverter}}" Text="{Binding BuildStatus}" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="10" Padding="50,0,50,0" Background="{Binding BuildStatusBackground}" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </materialDesign:Card>
+        <Grid Grid.Row="1" Margin="5,0,5,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <ComboBox SelectedItem="{Binding SelectedProject, Mode=TwoWay}" ItemsSource="{Binding ProjectNames}" materialDesign:HintAssist.Hint="Project" VerticalAlignment="Stretch" Style="{DynamicResource MaterialDesignFilledComboBox}" />
+                <ComboBox SelectedItem="{Binding SelectedVersion, Mode=TwoWay}"  ItemsSource="{Binding VersionNames}" Grid.Column="2" materialDesign:HintAssist.Hint="Version" VerticalAlignment="Stretch" Style="{DynamicResource MaterialDesignFilledComboBox}" />
+                <Button Padding="20,5,20,5" Grid.Column="4" Style="{DynamicResource MaterialDesignOutlinedButton}" Content="Build" Command="{StaticResource BuildCommand}" />
+            </Grid>
+            <Button Grid.Column="2" Style="{DynamicResource MaterialDesignOutlinedButton}" Content="Zip last Build" Command="{StaticResource ZipCommand}" />
+        </Grid>
+    </Grid>
+</Window>
