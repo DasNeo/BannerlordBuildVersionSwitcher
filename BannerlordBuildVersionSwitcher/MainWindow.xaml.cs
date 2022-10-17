@@ -242,7 +242,7 @@ namespace BannerlordBuildVersionSwitcher
                 zipOutTemp = zipOut.Replace(".zip", "") + counter + ".zip";
                 counter++;
             }
-            ZipFile.CreateFromDirectory(newPath, zipOutTemp);
+            ZipFile.CreateFromDirectory(newPath, zipOutTemp, CompressionLevel.SmallestSize, true);
 
             var zipPath = System.IO.Path.GetDirectoryName(zipOut);
             if(zipPath != null)
