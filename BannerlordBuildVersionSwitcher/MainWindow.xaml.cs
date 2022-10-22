@@ -117,18 +117,15 @@ namespace BannerlordBuildVersionSwitcher
             XmlDocument doc = new XmlDocument();
             doc.Load(csproj);
 
-            XmlNodeList outPath = doc.GetElementsByTagName("OutputPath");
-            if (outPath.Count == 0)
-                outPath = doc.GetElementsByTagName("BaseOutPath");
-
-            if (outPath.Count == 0)
-                outPath = doc.GetElementsByTagName("BaseOutputPath");
+            List<XmlNode> outPath = doc.GetElementsByTagName("OutputPath").Cast<XmlNode>().ToList();
+            outPath.AddRange(doc.GetElementsByTagName("BaseOutPath").Cast<XmlNode>().ToList());
+            outPath.AddRange(doc.GetElementsByTagName("BaseOutputPath").Cast<XmlNode>().ToList());
 
             if (outPath.Count != 0)
             {
                 foreach(XmlNode node in outPath)
                 {
-                    if (node.InnerText.Contains("Bannerlord"))
+                    if (node.InnerText.ToLower().Contains("bannerlord"))
                         ZipInPath = node.InnerText;
                 }
             }
@@ -160,7 +157,7 @@ namespace BannerlordBuildVersionSwitcher
                 }
                 if(!hasPrivateNode && !skipNode)
                 {
-                    var node = reference.AppendChild(doc.CreateElement("Private"));
+                    var node = reference.AppendChild(doc.CreateElement("Private", doc.DocumentElement.NamespaceURI));
                     node.InnerText = "False";
                 }
             }
